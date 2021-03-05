@@ -14,7 +14,7 @@ public class EmployeeRepsitoryImpl implements EmployeeRepository {
 	@Override
 	public Boolean saveEmployee(Employee employee) {
 		Session session = HibernateUtility.getSession().openSession();
-		session.save(employee);
+		session.saveOrUpdate(employee);
 		session.beginTransaction().commit();
 		flag = Boolean.TRUE;
 		return flag;
