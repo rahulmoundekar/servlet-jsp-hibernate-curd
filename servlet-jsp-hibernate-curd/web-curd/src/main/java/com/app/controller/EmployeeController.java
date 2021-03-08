@@ -34,7 +34,7 @@ public class EmployeeController extends HttpServlet {
 			throws ServletException, IOException {
 		Employee employee = new Employee();
 		String sid = request.getParameter("id");
-		if (sid != null) {
+		if (sid != null && sid != "") {
 			employee.setId(Integer.parseInt(sid));
 		}
 		employee.setName(request.getParameter("name"));
@@ -46,7 +46,7 @@ public class EmployeeController extends HttpServlet {
 		} else {
 			request.setAttribute("error", "employee saved Successfully");
 		}
-		request.getRequestDispatcher("index.jsp").forward(request, response);
+		request.getRequestDispatcher("dashboard.jsp").forward(request, response);
 	}
 
 }

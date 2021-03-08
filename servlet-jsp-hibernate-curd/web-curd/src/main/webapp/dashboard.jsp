@@ -1,5 +1,14 @@
 <%@page import="com.app.entity.Employee"%>
 <%@page import="java.util.List"%>
+<%@page contentType="text/html; charset=ISO-8859-1"%>
+<%@page language="java" trimDirectiveWhitespaces="true"%>
+
+<%@page errorPage="error.jsp"%>
+<%@page isErrorPage="true"%>
+<%@ include file="header.jsp"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="a"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <head>
 <title>Employee Management</title>
 <meta charset="utf-8">
@@ -14,35 +23,21 @@
 <form class="form-horizontal" action="register" method="post">
 	<fieldset>
 
-		<%
-			String success = (String) request.getAttribute("success");
-			String error = (String) request.getAttribute("error");
-		%>
 
-		<%
-			if (success != null) {
-		%>
 
-		<div class="alert alert-success" style="width: 369px; margin: auto;">
-			<strong>Success!</strong>
-			<%=success%>
-		</div>
+		<a:if test="${ not empty success}">
+			<div class="alert alert-success" style="width: 369px; margin: auto;">
+				<strong>Success!</strong> ${success}
+			</div>
+			
+		</a:if>
 
-		<%
-			}
-		%>
 
-		<%
-			if (error != null) {
-		%>
-		<div class="alert alert-danger" style="width: 369px; margin: auto;">
-			<strong>Danger!</strong>
-			<%=error%>
-		</div>
-
-		<%
-			}
-		%>
+		<a:if test="${not empty error }">
+			<div class="alert alert-danger" style="width: 369px; margin: auto;">
+				<strong>Danger!</strong> ${error}
+			</div>
+		</a:if>
 
 		<br />
 		<!-- Form Name -->
@@ -60,7 +55,8 @@
 			<div class="col-md-4">
 
 				<input id="name" name="name" type="text" placeholder="Enter Name"
-					class="form-control input-md" required="" value="<%=employee.getName()%>">
+					class="form-control input-md" required=""
+					value="<%=employee.getName()%>">
 
 			</div>
 		</div>
@@ -82,9 +78,9 @@
 			<label class="col-md-4 control-label" for="salary">Enter
 				Salary</label>
 			<div class="col-md-4">
-				<input id="salary" name="salary" value="<%=employee.getSalary() %>" type="text"
-					placeholder="Enter Salary" class="form-control input-md"
-					required="">
+				<input id="salary" name="salary" value="<%=employee.getSalary()%>"
+					type="text" placeholder="Enter Salary"
+					class="form-control input-md" required="">
 
 			</div>
 		</div>
@@ -138,12 +134,25 @@
 		<div class="form-group">
 			<label class="col-md-4 control-label" for=""></label>
 			<div class="col-md-4">
-				<button type="submit" class="btn btn-success"> <span class="glyphicon glyphicon-pencil"></span>Save</button>
+				<button type="submit" class="btn btn-success">
+					<span class="glyphicon glyphicon-pencil"></span>Save
+				</button>
 			</div>
 		</div>
 		<%
 			}
 		%>
+		
+		<a:choose>
+			<a:when test="${not empty success}">
+					<h1>Hello</h1>
+			</a:when>
+			<a:otherwise>
+					<h1>Bye!</h1>
+			</a:otherwise>
+		</a:choose>
+		
+		
 
 	</fieldset>
 </form>
@@ -162,32 +171,24 @@
 			</tr>
 		</thead>
 		<tbody>
-			<%
-				List<Employee> employees = (List<Employee>) request.getAttribute("employees");
-				if (!employees.isEmpty()) {
-					for (Employee emp : employees) {
-			%>
-			<tr>
-				<td><%=emp.getId()%></td>
-				<td><%=emp.getName()%></td>
-				<td><%=emp.getMobile()%></td>
-				<td><%=emp.getSalary()%></td>
-				<td><a href="modify?id=<%=emp.getId()%>"><span class="glyphicon glyphicon-pencil"></span></a> | <a
-					href="delete?id=<%=emp.getId()%>"><span class="glyphicon glyphicon-trash"></span></a></td>
-			</tr>
+
+			<a:forEach items="${employees}" var="employee">
+				<tr>
+					<a:set value="${employee.name}" var="n"></a:set>
+					<td><a:out value="${employee.id}" /></td>
+					<td>${fn:toUpperCase(n)}</td>
+					<td>${employee.mobile}</td>
+					<td>${employee.salary}</td>
 
 
-			<%
-				}
-				} else {
-			%>
-			<%
-				out.write("Records Not found");
-			%>
-			<%
-				}
-			%>
+					<td><a href='<a:url value="modify?id=${employee.id}"></a:url>'><span
+							class="glyphicon glyphicon-pencil"></span></a> | <a href="delete?id="><span
+							class="glyphicon glyphicon-trash"></span></a></td>
+				</tr>
+			</a:forEach>
+
 		</tbody>
 	</table>
 </div>
 
+<%@ include file="footer.jsp"%>
